@@ -1,100 +1,602 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kas Kelas XI IPS 1</title>
-<style>
-:root{--bg:#f3f6fb;--card:#fff;--ink:#172033;--muted:#6b7280;--primary:#2563eb;--green:#16a34a;--red:#dc2626;--line:#e5eaf2}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--ink)}
-header{background:linear-gradient(135deg,#1d4ed8,#0f172a);color:white;padding:24px 16px}header .wrap,main{max-width:1100px;margin:auto}header h1{margin:0;font-size:clamp(23px,5vw,34px)}header p{margin:6px 0 0;color:#dbeafe}
-main{padding:16px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}.stat,.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 4px 16px #0f172a08}.stat small{color:var(--muted)}.stat strong{display:block;font-size:clamp(20px,4vw,27px);margin-top:7px;overflow-wrap:anywhere}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.tab{border:1px solid var(--line);background:white;color:var(--ink);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}.tab.active{background:var(--primary);color:white;border-color:var(--primary)}
-.panel h2{font-size:20px;margin:0 0 14px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar input,.toolbar select,form input,form select,form textarea{font:inherit;border:1px solid #cbd5e1;border-radius:9px;padding:10px;background:white;color:var(--ink);min-width:0}
-.toolbar input{flex:1;min-width:150px}button{font:inherit}.btn{border:0;border-radius:9px;padding:10px 13px;font-weight:700;cursor:pointer;background:var(--primary);color:white}.btn.secondary{background:#e8eefc;color:#1d4ed8}.btn.danger{background:#fee2e2;color:#b91c1c}.btn.green{background:#dcfce7;color:#166534}
-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:10px 0 16px}form textarea{grid-column:1/-1}form button{align-self:stretch}
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:600px;background:white}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:14px}th{background:#f8fafc;color:#475569;white-space:nowrap}tr:last-child td{border-bottom:0}.paid{color:#15803d;font-weight:800}.unpaid{color:#b91c1c;font-weight:800}.monthgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.month{border:1px solid var(--line);border-radius:12px;padding:13px;background:#fff}.month b{display:block;margin-bottom:6px}.month strong{font-size:18px}.hint{color:var(--muted);font-size:13px;line-height:1.5}.hidden{display:none!important}.empty{text-align:center;padding:22px;color:var(--muted)}footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
-@media(max-width:520px){main{padding:10px}.panel{padding:12px}.tab{flex:1;padding:9px 8px;font-size:13px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kas Kelas XI IPS 1</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        .bg-gradient-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 50%, #1d4ed8 100%);
+        }
+        .bg-gradient-card {
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(75, 85, 99, 0.5);
+            border-radius: 8px;
+        }
+    </style>
 </head>
-<body>
-<header><div class="wrap"><h1>💰 Monitoring Kas Kelas XI IPS 1</h1><p>Dashboard bendahara kelas • Tahun <span id="yearHead"></span></p></div></header>
-<main>
-<section class="stats">
-<div class="stat"><small>Saldo Kas Saat Ini</small><strong id="balance">Rp0</strong></div>
-<div class="stat"><small>Total Pemasukan</small><strong id="incomeTotal">Rp0</strong></div>
-<div class="stat"><small>Total Pengeluaran</small><strong id="expenseTotal">Rp0</strong></div>
-<div class="stat"><small>Jumlah Siswa</small><strong id="studentTotal">0</strong></div>
-</section>
-<nav>
-<button class="tab active" data-tab="dashboard">Dashboard</button><button class="tab" data-tab="students">Data Siswa</button><button class="tab" data-tab="payments">Pembayaran Mingguan</button><button class="tab" data-tab="transactions">Pemasukan & Pengeluaran</button><button class="tab" data-tab="recap">Rekap Bulanan</button><button class="tab" data-tab="backup">Backup Data</button>
-</nav>
-<section id="dashboard" class="panel">
-<h2>Ringkasan Kas</h2><p id="dashboardText">Tambahkan data siswa dan transaksi untuk mulai memantau kas kelas.</p>
-<div class="toolbar"><button class="btn" onclick="showTab('students')">+ Tambah Siswa</button><button class="btn secondary" onclick="showTab('transactions')">+ Catat Transaksi</button></div>
-<p class="hint">Data tersimpan di browser/perangkat ini (localStorage). Gunakan menu Backup Data secara berkala. Jika membuka website di perangkat atau browser lain, data tidak otomatis tersinkron.</p>
-</section>
-<section id="students" class="panel hidden">
-<h2>Data Siswa</h2>
-<form id="studentForm"><input id="studentName" placeholder="Nama lengkap siswa" required><button class="btn" type="submit">Tambah Siswa</button></form>
-<div class="toolbar"><input id="studentSearch" placeholder="Cari nama siswa..."></div>
-<div class="tablewrap"><table><thead><tr><th>No.</th><th>Nama Siswa</th><th>Aksi</th></tr></thead><tbody id="studentRows"></tbody></table></div>
-</section>
-<section id="payments" class="panel hidden">
-<h2>Pembayaran Kas Mingguan</h2>
-<div class="toolbar"><select id="payMonth"></select><select id="payYear"></select><input id="weeklyAmount" type="number" min="0" value="5000" aria-label="Nominal kas per minggu"><button class="btn secondary" id="applyAmount">Terapkan nominal</button></div>
-<p class="hint">Atur nominal kas per minggu (default Rp5.000). Klik status untuk mengubah antara sudah bayar dan belum bayar. Pembayaran yang ditandai akan tercatat sebagai pemasukan otomatis.</p>
-<div class="tablewrap"><table><thead><tr><th>Nama Siswa</th><th>Minggu 1</th><th>Minggu 2</th><th>Minggu 3</th><th>Minggu 4</th><th>Total Bayar</th></tr></thead><tbody id="paymentRows"></tbody></table></div>
-</section>
-<section id="transactions" class="panel hidden">
-<h2>Pemasukan & Pengeluaran</h2>
-<form id="transactionForm"><select id="txType"><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select><input id="txDate" type="date" required><input id="txAmount" type="number" min="1" placeholder="Nominal (Rp)" required><input id="txDesc" placeholder="Keterangan" required><button class="btn" type="submit">Simpan Transaksi</button></form>
-<div class="toolbar"><select id="txFilter"><option value="all">Semua transaksi</option><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select></div>
-<div class="tablewrap"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Keterangan</th><th>Nominal</th><th>Aksi</th></tr></thead><tbody id="txRows"></tbody></table></div>
-</section>
-<section id="recap" class="panel hidden">
-<h2>Rekap Kas Januari–Desember</h2><div class="toolbar"><select id="recapYear"></select></div><div class="monthgrid" id="monthGrid"></div>
-<h2 style="margin-top:18px">Ringkasan Tahunan</h2><p id="yearSummary"></p>
-</section>
-<section id="backup" class="panel hidden">
-<h2>Backup & Pemulihan Data</h2><p class="hint">Export file JSON untuk menyimpan salinan data. Import file backup untuk memulihkan data di browser ini.</p>
-<div class="toolbar"><button class="btn" id="exportBtn">⬇ Export Backup JSON</button><input id="importFile" type="file" accept=".json,application/json"><button class="btn secondary" id="importBtn">Import Backup</button><button class="btn danger" id="resetBtn">Hapus Semua Data</button></div><p id="backupMsg" class="hint"></p>
-</section>
-</main><footer>Monitoring Kas XI IPS 1 • Dibuat untuk pengelolaan kas kelas</footer>
-<script>
-const MONTHS=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const KEY='kasXIIPS1_v1';let data={students:[],transactions:[],payments:{},weeklyAmount:5000};
-const rupiah=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
-const today=()=>new Date().toISOString().slice(0,10);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function load(){try{const x=JSON.parse(localStorage.getItem(KEY));if(x&&Array.isArray(x.students)&&Array.isArray(x.transactions)){data={...data,...x};}}catch(e){}}
-function save(){localStorage.setItem(KEY,JSON.stringify(data));render();}
-function totals(){let income=0,expense=0;data.transactions.forEach(t=>t.type==='income'?income+=+t.amount:expense+=+t.amount);return{income,expense,balance:income-expense};}
-function dateParts(d){let x=new Date(d+'T12:00:00');return{x:x.getFullYear(),m:x.getMonth(),d:x.getDate()};}
-function render(){const t=totals();document.getElementById('balance').textContent=rupiah(t.balance);document.getElementById('incomeTotal').textContent=rupiah(t.income);document.getElementById('expenseTotal').textContent=rupiah(t.expense);document.getElementById('studentTotal').textContent=data.students.length;document.getElementById('yearHead').textContent=new Date().getFullYear();
-document.getElementById('dashboardText').textContent=`Saldo kas kelas saat ini ${rupiah(t.balance)}. Total pemasukan ${rupiah(t.income)} dan pengeluaran ${rupiah(t.expense)}. Terdapat ${data.students.length} siswa terdaftar.`;
-renderStudents();renderPayments();renderTransactions();renderRecap();}
-function renderStudents(){let q=document.getElementById('studentSearch').value.toLowerCase();let list=data.students.filter(s=>s.name.toLowerCase().includes(q));document.getElementById('studentRows').innerHTML=list.length?list.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.name)}</td><td><button class="btn secondary" onclick="editStudent('${s.id}')">Edit</button> <button class="btn danger" onclick="deleteStudent('${s.id}')">Hapus</button></td></tr>`).join(''):'<tr><td colspan="3" class="empty">Belum ada siswa.</td></tr>';}
-function renderPayments(){const m=+document.getElementById('payMonth').value,y=+document.getElementById('payYear').value;let html='';data.students.forEach(s=>{let sum=0,cells='';for(let w=1;w<=4;w++){let key=`${y}-${m}-${s.id}-${w}`,paid=!!data.payments[key];if(paid)sum+=+data.weeklyAmount;cells+=`<td><button class="btn ${paid?'green':'danger'}" onclick="togglePay('${s.id}',${y},${m},${w})">${paid?'✓ Sudah bayar':'✗ Belum bayar'}</button></td>`;}html+=`<tr><td>${esc(s.name)}</td>${cells}<td><b>${rupiah(sum)}</b></td></tr>`;});document.getElementById('paymentRows').innerHTML=html||'<tr><td colspan="6" class="empty">Tambahkan siswa terlebih dahulu.</td></tr>';}
-function renderTransactions(){let f=document.getElementById('txFilter').value;let arr=[...data.transactions].filter(t=>f==='all'||t.type===f).sort((a,b)=>b.date.localeCompare(a.date));document.getElementById('txRows').innerHTML=arr.length?arr.map(t=>`<tr><td>${esc(t.date)}</td><td class="${t.type==='income'?'paid':'unpaid'}">${t.type==='income'?'Pemasukan':'Pengeluaran'}</td><td>${esc(t.desc)}</td><td><b>${rupiah(t.amount)}</b></td><td><button class="btn danger" onclick="deleteTx('${t.id}')">Hapus</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty">Belum ada transaksi.</td></tr>';}
-function renderRecap(){let y=+document.getElementById('recapYear').value;let monthTotals=MONTHS.map((name,m)=>{let income=0,expense=0;data.transactions.forEach(t=>{let p=dateParts(t.date);if(p.x===y&&p.m===m){if(t.type==='income')income+=+t.amount;else expense+=+t.amount;}});return{name,income,expense,balance:income-expense};});document.getElementById('monthGrid').innerHTML=monthTotals.map(v=>`<div class="month"><b>${v.name}</b><div class="hint">Pemasukan: ${rupiah(v.income)}</div><div class="hint">Pengeluaran: ${rupiah(v.expense)}</div><strong>${rupiah(v.balance)}</strong></div>`).join('');let i=monthTotals.reduce((a,v)=>a+v.income,0),e=monthTotals.reduce((a,v)=>a+v.expense,0);document.getElementById('yearSummary').textContent=`Tahun ${y}: total pemasukan ${rupiah(i)}, total pengeluaran ${rupiah(e)}, saldo bersih ${rupiah(i-e)}.`;}
-function fillSelects(){let opts=MONTHS.map((m,i)=>`<option value="${i}">${m}</option>`).join('');document.getElementById('payMonth').innerHTML=opts;document.getElementById('payMonth').value=new Date().getMonth();let years='';for(let y=2024;y<=2035;y++)years+=`<option value="${y}">${y}</option>`;['payYear','recapYear'].forEach(id=>document.getElementById(id).innerHTML=years);document.getElementById('payYear').value=new Date().getFullYear();document.getElementById('recapYear').value=new Date().getFullYear();document.getElementById('weeklyAmount').value=data.weeklyAmount;document.getElementById('txDate').value=today();}
-function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('hidden',p.id!==id));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));}
-document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
-document.getElementById('studentForm').addEventListener('submit',e=>{e.preventDefault();let name=document.getElementById('studentName').value.trim();if(!name)return;if(data.students.some(s=>s.name.toLowerCase()===name.toLowerCase())){alert('Nama siswa sudah terdaftar.');return;}data.students.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random()),name});document.getElementById('studentName').value='';save();});
-document.getElementById('studentSearch').addEventListener('input',renderStudents);
-function editStudent(id){let s=data.students.find(x=>x.id===id);if(!s)return;let n=prompt('Ubah nama siswa:',s.name);if(n&&n.trim()){s.name=n.trim();save();}}
-function deleteStudent(id){if(!confirm('Hapus siswa ini? Catatan pembayaran historis tetap tersimpan.'))return;data.students=data.students.filter(s=>s.id!==id);save();}
-document.getElementById('applyAmount').onclick=()=>{let n=+document.getElementById('weeklyAmount').value;if(n<0||!Number.isFinite(n)){alert('Nominal tidak valid.');return;}if(!confirm('Mengubah nominal akan menyesuaikan nominal yang ditampilkan pada pembayaran yang sudah ditandai. Lanjutkan?'))return;data.weeklyAmount=n;save();};
-['payMonth','payYear'].forEach(id=>document.getElementById(id).addEventListener('change',renderPayments));
-function togglePay(sid,y,m,w){let key=`${y}-${m}-${sid}-${w}`;if(data.payments[key]){delete data.payments[key];data.transactions=data.transactions.filter(t=>t.paymentKey!==key);}else{data.payments[key]=true;let s=data.students.find(x=>x.id===sid);data.transactions.push({id:String(Date.now()+Math.random()),type:'income',date:`${y}-${String(m+1).padStart(2,'0')}-${String(Math.min(w*7,28)).padStart(2,'0')}`,amount:+data.weeklyAmount,desc:`Kas mingguan ${s?s.name:'Siswa'} • Minggu ${w} • ${MONTHS[m]} ${y}`,paymentKey:key});}save();}
-document.getElementById('transactionForm').addEventListener('submit',e=>{e.preventDefault();let amount=+document.getElementById('txAmount').value;if(amount<=0)return;data.transactions.push({id:String(Date.now()+Math.random()),type:document.getElementById('txType').value,date:document.getElementById('txDate').value,amount,desc:document.getElementById('txDesc').value.trim()});e.target.reset();document.getElementById('txDate').value=today();save();});
-document.getElementById('txFilter').addEventListener('change',renderTransactions);
-function deleteTx(id){let t=data.transactions.find(x=>x.id===id);if(t?.paymentKey){delete data.payments[t.paymentKey];}if(confirm('Hapus transaksi ini?')){data.transactions=data.transactions.filter(x=>x.id!==id);save();}}
-document.getElementById('recapYear').addEventListener('change',renderRecap);
-document.getElementById('exportBtn').onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-kas-xi-ips-1.json';a.click();URL.revokeObjectURL(a.href);};
-document.getElementById('importBtn').onclick=()=>{let file=document.getElementById('importFile').files[0];if(!file){alert('Pilih file backup JSON dahulu.');return;}let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x.students)||!Array.isArray(x.transactions)||typeof x.payments!=='object')throw Error();if(confirm('Import akan mengganti data yang ada. Lanjutkan?')){data={...data,...x};save();document.getElementById('backupMsg').textContent='Backup berhasil diimpor.';}}catch(e){alert('File backup tidak valid.');}};r.readAsText(file);};
-document.getElementById('resetBtn').onclick=()=>{if(prompt('Ketik HAPUS untuk menghapus semua data:')==='HAPUS'){data={students:[],transactions:[],payments:{},weeklyAmount:5000};save();}};
-load();fillSelects();render();
+<body class="min-h-screen pb-12 flex flex-col items-center">
+
+    <!-- Container Utama -->
+    <div class="w-full max-w-md md:max-w-xl px-4 pt-4">
+
+        <!-- Header -->
+        <header class="bg-gradient-header rounded-3xl p-6 shadow-xl text-white relative overflow-hidden mb-6">
+            <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-tight">Kas Kelas XI IPS 1</h1>
+                    <p class="text-xs text-blue-100/80 mt-1 font-medium flex items-center gap-1.5">
+                        <span id="syncStatus" class="w-2 h-2 rounded-full bg-amber-400"></span> Menghubungkan Cloud...
+                    </p>
+                </div>
+                <button onclick="openInfoModal()" class="w-10 h-10 rounded-full bg-white/25 hover:bg-white/35 backdrop-blur-md flex items-center justify-center transition">
+                    <i data-lucide="info" class="w-5 h-5 text-white"></i>
+                </button>
+            </div>
+
+            <!-- Selector Tahun & Bulan -->
+            <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-white/20">
+                <div>
+                    <label class="block text-[10px] font-bold text-blue-200 uppercase tracking-wider mb-1">Pilih Tahun</label>
+                    <select id="selectYear" onchange="changePeriod()" class="w-full bg-white/20 text-white font-semibold text-sm rounded-xl px-3 py-2 border border-white/20 focus:outline-none cursor-pointer">
+                        <option value="2026" class="text-gray-900">2026</option>
+                        <option value="2027" class="text-gray-900">2027</option>
+                        <option value="2028" class="text-gray-900">2028</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-blue-200 uppercase tracking-wider mb-1">Pilih Bulan</label>
+                    <select id="selectMonth" onchange="changePeriod()" class="w-full bg-white/20 text-white font-semibold text-sm rounded-xl px-3 py-2 border border-white/20 focus:outline-none cursor-pointer">
+                        <option value="0" class="text-gray-900">Januari</option>
+                        <option value="1" class="text-gray-900">Februari</option>
+                        <option value="2" class="text-gray-900">Maret</option>
+                        <option value="3" class="text-gray-900">April</option>
+                        <option value="4" class="text-gray-900">Mei</option>
+                        <option value="5" class="text-gray-900">Juni</option>
+                        <option value="6" class="text-gray-900">Juli</option>
+                        <option value="7" class="text-gray-900">Agustus</option>
+                        <option value="8" class="text-gray-900">September</option>
+                        <option value="9" class="text-gray-900">Oktober</option>
+                        <option value="10" class="text-gray-900">November</option>
+                        <option value="11" class="text-gray-900">Desember</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- Kartu Saldo Kas -->
+        <div class="bg-gradient-card rounded-3xl p-6 shadow-xl text-white mb-6 relative overflow-hidden">
+            <div class="text-xs font-semibold tracking-wider text-blue-100 uppercase mb-1">Total Saldo Kas</div>
+            <div class="text-3xl font-extrabold tracking-tight mb-4" id="totalBalance">Rp 0</div>
+            
+            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-blue-400/30">
+                <div>
+                    <div class="text-[11px] font-medium text-blue-100 uppercase">Pemasukan</div>
+                    <div class="text-lg font-bold text-emerald-300" id="totalIncome">Rp 0</div>
+                </div>
+                <div>
+                    <div class="text-[11px] font-medium text-blue-100 uppercase">Pengeluaran</div>
+                    <div class="text-lg font-bold text-rose-300" id="totalExpense">Rp 0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progres Iuran Kas -->
+        <div class="glass-panel rounded-2xl p-4 mb-6">
+            <div class="flex justify-between items-center mb-2 text-xs">
+                <span class="font-semibold text-gray-300">Progres Iuran Kas Bulan Ini</span>
+                <span class="font-bold text-blue-400" id="progressPercent">0%</span>
+            </div>
+            <div class="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden">
+                <div id="progressBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-gray-400 mt-2">
+                <span id="completedWeeksCount">0 dari 0 Sesi Terbayar</span>
+                <span>Rp 5.000 / minggu</span>
+            </div>
+        </div>
+
+        <!-- Tab Navigasi -->
+        <div class="flex bg-gray-900/80 p-1.5 rounded-2xl mb-6 border border-gray-800">
+            <button id="tabStudentsBtn" onclick="switchTab('students')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-blue-600 text-white shadow">
+                <i data-lucide="users" class="w-4 h-4"></i> Siswa & Kas
+            </button>
+            <button id="tabTransactionsBtn" onclick="switchTab('transactions')" class="flex-1 py-2.5 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition flex items-center justify-center gap-2">
+                <i data-lucide="receipt" class="w-4 h-4"></i> Transaksi
+            </button>
+        </div>
+
+        <!-- SECTION 1: SISWA -->
+        <div id="studentsSection">
+            <div class="flex flex-col gap-3 mb-4">
+                <div class="flex gap-2">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="searchInput" oninput="renderStudents()" placeholder="Cari nama siswa..." class="w-full bg-gray-900 text-sm text-gray-200 placeholder-gray-500 pl-9 pr-3 py-2.5 rounded-xl border border-gray-800 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <button onclick="openAddStudentModal()" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition flex items-center justify-center shadow">
+                        <i data-lucide="user-plus" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <select id="filterStatus" onchange="renderStudents()" class="bg-gray-900 text-xs text-gray-300 rounded-xl px-3 py-2 border border-gray-800 focus:outline-none">
+                    <option value="all">Semua Status</option>
+                    <option value="lunas">Lunas (4 Minggu)</option>
+                    <option value="numpuk">Belum Lunas</option>
+                </select>
+            </div>
+
+            <div id="studentsList" class="space-y-3 mb-6"></div>
+        </div>
+
+        <!-- SECTION 2: TRANSAKSI -->
+        <div id="transactionsSection" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-sm font-bold text-gray-300">Catatan Penggunaan Kas</h3>
+                <button onclick="openTransactionModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Catat Transaksi
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                <select id="filterTxType" onchange="renderTransactions()" class="bg-gray-900 text-xs text-gray-300 rounded-xl px-3 py-2 border border-gray-800 focus:outline-none">
+                    <option value="all">Semua Jenis</option>
+                    <option value="expense">Pengeluaran</option>
+                    <option value="income">Pemasukan</option>
+                </select>
+                <select id="filterTxCategory" onchange="renderTransactions()" class="bg-gray-900 text-xs text-gray-300 rounded-xl px-3 py-2 border border-gray-800 focus:outline-none">
+                    <option value="all">Semua Kategori</option>
+                    <option value="Spidol/Alat Tulis">Spidol/Alat Tulis</option>
+                    <option value="Galon/Konsumsi">Galon/Konsumsi</option>
+                    <option value="Fotokopi/Print">Fotokopi/Print</option>
+                    <option value="Kebersihan Class">Kebersihan Class</option>
+                    <option value="Dana Sosial/Jenguk">Dana Sosial/Jenguk</option>
+                    <option value="Acara/Dekorasi">Acara/Dekorasi</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+
+            <div id="transactionsList" class="space-y-3 mb-6"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: Tambah Siswa -->
+    <div id="addStudentModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-5 shadow-2xl">
+            <h3 class="text-base font-bold text-white mb-4">Tambah Siswa Baru</h3>
+            <input type="text" id="newStudentName" placeholder="Nama Lengkap Siswa" class="w-full bg-gray-800 text-sm text-white placeholder-gray-500 p-3 rounded-xl border border-gray-700 focus:outline-none focus:border-blue-500 mb-4">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeAddStudentModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-300">Batal</button>
+                <button onclick="saveStudent()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Transaksi -->
+    <div id="transactionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-5 shadow-2xl">
+            <h3 class="text-base font-bold text-white mb-4">Catat Transaksi Kas</h3>
+            <div class="space-y-3 mb-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Jenis</label>
+                    <select id="txType" class="w-full bg-gray-800 text-sm text-white rounded-xl p-2.5 border border-gray-700 focus:outline-none">
+                        <option value="expense">Pengeluaran</option>
+                        <option value="income">Pemasukan Tambahan</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Kategori</label>
+                    <select id="txCategory" class="w-full bg-gray-800 text-sm text-white rounded-xl p-2.5 border border-gray-700 focus:outline-none">
+                        <option value="Spidol/Alat Tulis">Spidol / Alat Tulis</option>
+                        <option value="Galon/Konsumsi">Galon / Konsumsi</option>
+                        <option value="Fotokopi/Print">Fotokopi & Print</option>
+                        <option value="Kebersihan Class">Alat Kebersihan</option>
+                        <option value="Dana Sosial/Jenguk">Dana Sosial / Jenguk</option>
+                        <option value="Acara/Dekorasi">Acara Kelas / Dekorasi</option>
+                        <option value="Lainnya">Lain-lain</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Nominal (Rp)</label>
+                    <input type="number" id="txAmount" placeholder="Contoh: 15000" class="w-full bg-gray-800 text-sm text-white placeholder-gray-500 p-2.5 rounded-xl border border-gray-700 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Keterangan Detail</label>
+                    <input type="text" id="txDescription" placeholder="Contoh: Beli spidol 2 pcs" class="w-full bg-gray-800 text-sm text-white placeholder-gray-500 p-2.5 rounded-xl border border-gray-700 focus:outline-none">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button onclick="closeTransactionModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-300">Batal</button>
+                <button onclick="saveTransaction()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Info -->
+    <div id="infoModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-5 shadow-2xl">
+            <h3 class="text-base font-bold text-white mb-2">Informasi Kas Kelas</h3>
+            <p class="text-xs text-gray-400 leading-relaxed mb-4">
+                Sistem Kas Kelas XI IPS 1 terhubung langsung dengan Firebase Database secara real-time. Nominal iuran adalah **Rp 5.000 / minggu**.
+            </p>
+            <button onclick="closeInfoModal()" class="w-full py-2.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white">Mengerti</button>
+        </div>
+    </div>
+
+    <!-- FIREBASE & LOGIKA APLIKASI -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+          apiKey: "AIzaSyBa622I1V5L6At5RqnRCM9xz-8aCEfPN4M",
+          authDomain: "kas-kelas-xi-ips-1-f50b5.firebaseapp.com",
+          projectId: "kas-kelas-xi-ips-1-f50b5",
+          storageBucket: "kas-kelas-xi-ips-1-f50b5.firebasestorage.app",
+          messagingSenderId: "483576265630",
+          appId: "1:483576265630:web:dd84b40f7aed478ae1b48f",
+          measurementId: "G-H2MBCYCXM2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const defaultStudentsList = [
+            "Akila", "Fabyan", "Joshua", "Kayyasah", "Maritza", 
+            "Muhammad Razel Alfa Tourino", "Aditya", "Anisa", "Bagas", "Dewa"
+        ];
+        const WEEKLY_AMOUNT = 5000;
+
+        let currentYear = "2026";
+        let currentMonth = "0";
+        let appData = { students: [], transactions: [] };
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const now = new Date();
+            currentYear = now.getFullYear().toString();
+            if(!["2026", "2027", "2028"].includes(currentYear)) currentYear = "2026";
+            currentMonth = now.getMonth().toString();
+
+            document.getElementById('selectYear').value = currentYear;
+            document.getElementById('selectMonth').value = currentMonth;
+
+            await loadDataFromFirebase();
+            lucide.createIcons();
+        });
+
+        function getDocKey() {
+            return `period_${currentYear}_${currentMonth}`;
+        }
+
+        async function loadDataFromFirebase() {
+            const statusEl = document.getElementById('syncStatus');
+            statusEl.className = "w-2 h-2 rounded-full bg-amber-400";
+            
+            try {
+                const docRef = doc(db, "kas_data", getDocKey());
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    appData = docSnap.data();
+                } else {
+                    appData = {
+                        students: defaultStudentsList.map((name, index) => ({
+                            id: Date.now() + index,
+                            name: name,
+                            weeks: [false, false, false, false]
+                        })),
+                        transactions: []
+                    };
+                    await saveDataToFirebase();
+                }
+                statusEl.className = "w-2 h-2 rounded-full bg-emerald-400";
+            } catch (error) {
+                console.error("Gagal memuat database:", error);
+                statusEl.className = "w-2 h-2 rounded-full bg-rose-500";
+            }
+            renderAll();
+        }
+
+        async function saveDataToFirebase() {
+            const statusEl = document.getElementById('syncStatus');
+            statusEl.className = "w-2 h-2 rounded-full bg-amber-400";
+            try {
+                await setDoc(doc(db, "kas_data", getDocKey()), appData);
+                statusEl.className = "w-2 h-2 rounded-full bg-emerald-400";
+            } catch (error) {
+                console.error("Gagal menyimpan database:", error);
+                statusEl.className = "w-2 h-2 rounded-full bg-rose-500";
+            }
+        }
+
+        window.changePeriod = async function() {
+            currentYear = document.getElementById('selectYear').value;
+            currentMonth = document.getElementById('selectMonth').value;
+            await loadDataFromFirebase();
+        }
+
+        function renderAll() {
+            calculateDashboard();
+            renderStudents();
+            renderTransactions();
+        }
+
+        function calculateDashboard() {
+            let totalIncome = 0;
+            let totalExpense = 0;
+            let totalWeeksPaid = 0;
+            let maxTotalWeeks = appData.students.length * 4;
+
+            appData.students.forEach(s => {
+                s.weeks.forEach(w => {
+                    if(w) {
+                        totalIncome += WEEKLY_AMOUNT;
+                        totalWeeksPaid++;
+                    }
+                });
+            });
+
+            appData.transactions.forEach(t => {
+                if (t.type === 'income') totalIncome += t.amount;
+                else if (t.type === 'expense') totalExpense += t.amount;
+            }
+        });
+
+        const totalBalance = totalIncome - totalExpense;
+
+        document.getElementById('totalBalance').innerText = `Rp ${totalBalance.toLocaleString('id-ID')}`;
+        document.getElementById('totalIncome').innerText = `Rp ${totalIncome.toLocaleString('id-ID')}`;
+        document.getElementById('totalExpense').innerText = `Rp ${totalExpense.toLocaleString('id-ID')}`;
+
+        const percent = maxTotalWeeks > 0 ? Math.round((totalWeeksPaid / maxTotalWeeks) * 100) : 0;
+        document.getElementById('progressPercent').innerText = `${percent}%`;
+        document.getElementById('progressBar').style.width = `${percent}%`;
+        document.getElementById('completedWeeksCount').innerText = `${totalWeeksPaid} dari ${maxTotalWeeks} Sesi Terbayar`;
+    }
+
+    window.toggleWeek = async function(studentId, weekIndex) {
+        const student = appData.students.find(s => s.id === studentId);
+        if (student) {
+            student.weeks[weekIndex] = !student.weeks[weekIndex];
+            await saveDataToFirebase();
+            renderAll();
+        }
+    }
+
+    window.setAllWeeks = async function(studentId, status) {
+        const student = appData.students.find(s => s.id === studentId);
+        if (student) {
+            student.weeks = [status, status, status, status];
+            await saveDataToFirebase();
+            renderAll();
+        }
+    }
+
+    window.renderStudents = function() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const filter = document.getElementById('filterStatus').value;
+        const container = document.getElementById('studentsList');
+        container.innerHTML = '';
+
+        const filtered = appData.students.filter(s => {
+            const matchSearch = s.name.toLowerCase().includes(search);
+            const paidCount = s.weeks.filter(Boolean).length;
+            let matchFilter = true;
+            if (filter === 'lunas') matchFilter = (paidCount === 4);
+            if (filter === 'numpuk') matchFilter = (paidCount < 4);
+            return matchSearch && matchFilter;
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="text-center py-8 text-gray-500 text-xs">Tidak ada data siswa ditemukan.</div>`;
+            return;
+        }
+
+        filtered.forEach(s => {
+            const paidCount = s.weeks.filter(Boolean).length;
+            const isLunas = paidCount === 4;
+
+            const card = document.createElement('div');
+            card.className = "glass-panel p-4 rounded-2xl flex flex-col gap-3";
+            card.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-sm text-white">${s.name}</h4>
+                        <div class="text-[11px] text-gray-400 mt-0.5">
+                            Terbayar: <span class="font-bold text-blue-400">${paidCount}/4 Minggu</span> (Rp ${(paidCount * WEEKLY_AMOUNT).toLocaleString('id-ID')})
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        ${isLunas 
+                            ? `<span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-full border border-emerald-500/30">LUNAS</span>`
+                            : `<span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-full border border-amber-500/30">${4 - paidCount} Mg Lagi</span>`
+                        }
+                        <button onclick="deleteStudent(${s.id})" class="text-gray-500 hover:text-rose-400 p-1">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-2 pt-2 border-t border-gray-800">
+                    ${s.weeks.map((isPaid, idx) => `
+                        <button onclick="toggleWeek(${s.id}, ${idx})" class="py-2 rounded-xl text-xs font-bold transition border ${
+                            isPaid 
+                            ? 'bg-emerald-600/30 border-emerald-500/50 text-emerald-300 hover:bg-emerald-600/40' 
+                            : 'bg-gray-800/80 border-gray-700 text-gray-400 hover:bg-gray-700'
+                        }">Mg ${idx + 1}</button>
+                    `).join('')}
+                </div>
+                <div class="flex justify-end gap-3 text-[10px] text-gray-400 pt-1">
+                    <button onclick="setAllWeeks(${s.id}, true)" class="hover:text-emerald-400 font-semibold">+ Lunasi All</button>
+                    <span>•</span>
+                    <button onclick="setAllWeeks(${s.id}, false)" class="hover:text-rose-400 font-semibold">Reset</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        lucide.createIcons();
+    }
+
+    window.openAddStudentModal = () => document.getElementById('addStudentModal').classList.remove('hidden');
+    window.closeAddStudentModal = () => {
+        document.getElementById('addStudentModal').classList.add('hidden');
+        document.getElementById('newStudentName').value = '';
+    }
+
+    window.saveStudent = async function() {
+        const name = document.getElementById('newStudentName').value.trim();
+        if (name !== "") {
+            appData.students.push({
+                id: Date.now(),
+                name: name,
+                weeks: [false, false, false, false]
+            });
+            await saveDataToFirebase();
+            renderAll();
+            closeAddStudentModal();
+        } else {
+            alert("Masukkan nama siswa!");
+        }
+    }
+
+    window.deleteStudent = async function(id) {
+        if (confirm("Hapus siswa ini?")) {
+            appData.students = appData.students.filter(s => s.id !== id);
+            await saveDataToFirebase();
+            renderAll();
+        }
+    }
+
+    window.renderTransactions = function() {
+        const typeFilter = document.getElementById('filterTxType').value;
+        const catFilter = document.getElementById('filterTxCategory').value;
+        const container = document.getElementById('transactionsList');
+        container.innerHTML = '';
+
+        const filtered = appData.transactions.filter(t => {
+            const matchType = typeFilter === 'all' || t.type === typeFilter;
+            const matchCat = catFilter === 'all' || t.category === catFilter;
+            return matchType && matchCat;
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="text-center py-8 text-gray-500 text-xs">Belum ada transaksi.</div>`;
+            return;
+        }
+
+        filtered.sort((a, b) => b.id - a.id).forEach(t => {
+            const isExpense = t.type === 'expense';
+            const card = document.createElement('div');
+            card.className = "glass-panel p-4 rounded-2xl flex items-center justify-between";
+            card.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center ${isExpense ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">
+                        <i data-lucide="${isExpense ? 'arrow-up-right' : 'arrow-down-left'}" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h4 class="font-bold text-xs text-white">${t.description}</h4>
+                            <span class="bg-gray-800 text-[9px] font-semibold text-gray-300 px-2 py-0.5 rounded-md border border-gray-700">${t.category}</span>
+                        </div>
+                        <div class="text-[10px] text-gray-400 mt-0.5">${t.date}</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="font-extrabold text-xs ${isExpense ? 'text-rose-400' : 'text-emerald-400'}">
+                        ${isExpense ? '-' : '+'} Rp ${t.amount.toLocaleString('id-ID')}
+                    </span>
+                    <button onclick="deleteTransaction(${t.id})" class="text-gray-500 hover:text-rose-400 p-1">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        lucide.createIcons();
+    }
+
+    window.openTransactionModal = () => document.getElementById('transactionModal').classList.remove('hidden');
+    window.closeTransactionModal = () => {
+        document.getElementById('transactionModal').classList.add('hidden');
+        document.getElementById('txAmount').value = '';
+        document.getElementById('txDescription').value = '';
+    }
+
+    window.saveTransaction = async function() {
+        const type = document.getElementById('txType').value;
+        const category = document.getElementById('txCategory').value;
+        const amount = parseInt(document.getElementById('txAmount').value);
+        const description = document.getElementById('txDescription').value.trim();
+
+        if (amount > 0 && description) {
+            const now = new Date();
+            const dateStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+            
+            appData.transactions.push({
+                id: Date.now(),
+                type, category, amount, description, date: dateStr
+            });
+
+            await saveDataToFirebase();
+            renderAll();
+            closeTransactionModal();
+        }
+    }
+
+    window.deleteTransaction = async function(id) {
+        if (confirm("Hapus transaksi ini?")) {
+            appData.transactions = appData.transactions.filter(t => t.id !== id);
+            await saveDataToFirebase();
+            renderAll();
+        }
+    }
+
+    window.switchTab = function(tab) {
+        const studentsSec = document.getElementById('studentsSection');
+        const txSec = document.getElementById('transactionsSection');
+        const tabStudentsBtn = document.getElementById('tabStudentsBtn');
+        const tabTxBtn = document.getElementById('tabTransactionsBtn');
+
+        if (tab === 'students') {
+            studentsSec.classList.remove('hidden');
+            txSec.classList.add('hidden');
+            tabStudentsBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-blue-600 text-white shadow";
+            tabTxBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition flex items-center justify-center gap-2";
+        } else {
+            studentsSec.classList.add('hidden');
+            txSec.classList.remove('hidden');
+            tabTxBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-blue-600 text-white shadow";
+            tabStudentsBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition flex items-center justify-center gap-2";
+        }
+    }
+
+    window.openInfoModal = () => document.getElementById('infoModal').classList.remove('hidden');
+    window.closeInfoModal = () => document.getElementById('infoModal').classList.add('hidden');
 </script>
-</body></html>
+</body>
+</html>
