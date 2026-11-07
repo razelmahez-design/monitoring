@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kas Kelas XI IPS 1</title>
+<style>
+:root{--bg:#f3f6fb;--card:#fff;--ink:#172033;--muted:#6b7280;--primary:#2563eb;--green:#16a34a;--red:#dc2626;--line:#e5eaf2}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#1d4ed8,#0f172a);color:white;padding:24px 16px}header .wrap,main{max-width:1100px;margin:auto}header h1{margin:0;font-size:clamp(23px,5vw,34px)}header p{margin:6px 0 0;color:#dbeafe}
+main{padding:16px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}.stat,.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 4px 16px #0f172a08}.stat small{color:var(--muted)}.stat strong{display:block;font-size:clamp(20px,4vw,27px);margin-top:7px;overflow-wrap:anywhere}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.tab{border:1px solid var(--line);background:white;color:var(--ink);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}.tab.active{background:var(--primary);color:white;border-color:var(--primary)}
+.panel h2{font-size:20px;margin:0 0 14px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar input,.toolbar select,form input,form select,form textarea{font:inherit;border:1px solid #cbd5e1;border-radius:9px;padding:10px;background:white;color:var(--ink);min-width:0}
+.toolbar input{flex:1;min-width:150px}button{font:inherit}.btn{border:0;border-radius:9px;padding:10px 13px;font-weight:700;cursor:pointer;background:var(--primary);color:white}.btn.secondary{background:#e8eefc;color:#1d4ed8}.btn.danger{background:#fee2e2;color:#b91c1c}.btn.green{background:#dcfce7;color:#166534}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:10px 0 16px}form textarea{grid-column:1/-1}form button{align-self:stretch}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:600px;background:white}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:14px}th{background:#f8fafc;color:#475569;white-space:nowrap}tr:last-child td{border-bottom:0}.paid{color:#15803d;font-weight:800}.unpaid{color:#b91c1c;font-weight:800}.monthgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.month{border:1px solid var(--line);border-radius:12px;padding:13px;background:#fff}.month b{display:block;margin-bottom:6px}.month strong{font-size:18px}.hint{color:var(--muted);font-size:13px;line-height:1.5}.hidden{display:none!important}.empty{text-align:center;padding:22px;color:var(--muted)}footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
+@media(max-width:520px){main{padding:10px}.panel{padding:12px}.tab{flex:1;padding:9px 8px;font-size:13px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>💰 Monitoring Kas Kelas XI IPS 1</h1><p>Dashboard bendahara kelas • Tahun <span id="yearHead"></span></p></div></header>
+<main>
+<section class="stats">
+<div class="stat"><small>Saldo Kas Saat Ini</small><strong id="balance">Rp0</strong></div>
+<div class="stat"><small>Total Pemasukan</small><strong id="incomeTotal">Rp0</strong></div>
+<div class="stat"><small>Total Pengeluaran</small><strong id="expenseTotal">Rp0</strong></div>
+<div class="stat"><small>Jumlah Siswa</small><strong id="studentTotal">0</strong></div>
+</section>
+<nav>
+<button class="tab active" data-tab="dashboard">Dashboard</button><button class="tab" data-tab="students">Data Siswa</button><button class="tab" data-tab="payments">Pembayaran Mingguan</button><button class="tab" data-tab="transactions">Pemasukan & Pengeluaran</button><button class="tab" data-tab="recap">Rekap Bulanan</button><button class="tab" data-tab="backup">Backup Data</button>
+</nav>
+<section id="dashboard" class="panel">
+<h2>Ringkasan Kas</h2><p id="dashboardText">Tambahkan data siswa dan transaksi untuk mulai memantau kas kelas.</p>
+<div class="toolbar"><button class="btn" onclick="showTab('students')">+ Tambah Siswa</button><button class="btn secondary" onclick="showTab('transactions')">+ Catat Transaksi</button></div>
+<p class="hint">Data tersimpan di browser/perangkat ini (localStorage). Gunakan menu Backup Data secara berkala. Jika membuka website di perangkat atau browser lain, data tidak otomatis tersinkron.</p>
+</section>
+<section id="students" class="panel hidden">
+<h2>Data Siswa</h2>
+<form id="studentForm"><input id="studentName" placeholder="Nama lengkap siswa" required><button class="btn" type="submit">Tambah Siswa</button></form>
+<div class="toolbar"><input id="studentSearch" placeholder="Cari nama siswa..."></div>
+<div class="tablewrap"><table><thead><tr><th>No.</th><th>Nama Siswa</th><th>Aksi</th></tr></thead><tbody id="studentRows"></tbody></table></div>
+</section>
+<section id="payments" class="panel hidden">
+<h2>Pembayaran Kas Mingguan</h2>
+<div class="toolbar"><select id="payMonth"></select><select id="payYear"></select><input id="weeklyAmount" type="number" min="0" value="5000" aria-label="Nominal kas per minggu"><button class="btn secondary" id="applyAmount">Terapkan nominal</button></div>
+<p class="hint">Atur nominal kas per minggu (default Rp5.000). Klik status untuk mengubah antara sudah bayar dan belum bayar. Pembayaran yang ditandai akan tercatat sebagai pemasukan otomatis.</p>
+<div class="tablewrap"><table><thead><tr><th>Nama Siswa</th><th>Minggu 1</th><th>Minggu 2</th><th>Minggu 3</th><th>Minggu 4</th><th>Total Bayar</th></tr></thead><tbody id="paymentRows"></tbody></table></div>
+</section>
+<section id="transactions" class="panel hidden">
+<h2>Pemasukan & Pengeluaran</h2>
+<form id="transactionForm"><select id="txType"><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select><input id="txDate" type="date" required><input id="txAmount" type="number" min="1" placeholder="Nominal (Rp)" required><input id="txDesc" placeholder="Keterangan" required><button class="btn" type="submit">Simpan Transaksi</button></form>
+<div class="toolbar"><select id="txFilter"><option value="all">Semua transaksi</option><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select></div>
+<div class="tablewrap"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Keterangan</th><th>Nominal</th><th>Aksi</th></tr></thead><tbody id="txRows"></tbody></table></div>
+</section>
+<section id="recap" class="panel hidden">
+<h2>Rekap Kas Januari–Desember</h2><div class="toolbar"><select id="recapYear"></select></div><div class="monthgrid" id="monthGrid"></div>
+<h2 style="margin-top:18px">Ringkasan Tahunan</h2><p id="yearSummary"></p>
+</section>
+<section id="backup" class="panel hidden">
+<h2>Backup & Pemulihan Data</h2><p class="hint">Export file JSON untuk menyimpan salinan data. Import file backup untuk memulihkan data di browser ini.</p>
+<div class="toolbar"><button class="btn" id="exportBtn">⬇ Export Backup JSON</button><input id="importFile" type="file" accept=".json,application/json"><button class="btn secondary" id="importBtn">Import Backup</button><button class="btn danger" id="resetBtn">Hapus Semua Data</button></div><p id="backupMsg" class="hint"></p>
+</section>
+</main><footer>Monitoring Kas XI IPS 1 • Dibuat untuk pengelolaan kas kelas</footer>
+<script>
+const MONTHS=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const KEY='kasXIIPS1_v1';let data={students:[],transactions:[],payments:{},weeklyAmount:5000};
+const rupiah=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY));if(x&&Array.isArray(x.students)&&Array.isArray(x.transactions)){data={...data,...x};}}catch(e){}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render();}
+function totals(){let income=0,expense=0;data.transactions.forEach(t=>t.type==='income'?income+=+t.amount:expense+=+t.amount);return{income,expense,balance:income-expense};}
+function dateParts(d){let x=new Date(d+'T12:00:00');return{x:x.getFullYear(),m:x.getMonth(),d:x.getDate()};}
+function render(){const t=totals();document.getElementById('balance').textContent=rupiah(t.balance);document.getElementById('incomeTotal').textContent=rupiah(t.income);document.getElementById('expenseTotal').textContent=rupiah(t.expense);document.getElementById('studentTotal').textContent=data.students.length;document.getElementById('yearHead').textContent=new Date().getFullYear();
+document.getElementById('dashboardText').textContent=`Saldo kas kelas saat ini ${rupiah(t.balance)}. Total pemasukan ${rupiah(t.income)} dan pengeluaran ${rupiah(t.expense)}. Terdapat ${data.students.length} siswa terdaftar.`;
+renderStudents();renderPayments();renderTransactions();renderRecap();}
+function renderStudents(){let q=document.getElementById('studentSearch').value.toLowerCase();let list=data.students.filter(s=>s.name.toLowerCase().includes(q));document.getElementById('studentRows').innerHTML=list.length?list.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.name)}</td><td><button class="btn secondary" onclick="editStudent('${s.id}')">Edit</button> <button class="btn danger" onclick="deleteStudent('${s.id}')">Hapus</button></td></tr>`).join(''):'<tr><td colspan="3" class="empty">Belum ada siswa.</td></tr>';}
+function renderPayments(){const m=+document.getElementById('payMonth').value,y=+document.getElementById('payYear').value;let html='';data.students.forEach(s=>{let sum=0,cells='';for(let w=1;w<=4;w++){let key=`${y}-${m}-${s.id}-${w}`,paid=!!data.payments[key];if(paid)sum+=+data.weeklyAmount;cells+=`<td><button class="btn ${paid?'green':'danger'}" onclick="togglePay('${s.id}',${y},${m},${w})">${paid?'✓ Sudah bayar':'✗ Belum bayar'}</button></td>`;}html+=`<tr><td>${esc(s.name)}</td>${cells}<td><b>${rupiah(sum)}</b></td></tr>`;});document.getElementById('paymentRows').innerHTML=html||'<tr><td colspan="6" class="empty">Tambahkan siswa terlebih dahulu.</td></tr>';}
+function renderTransactions(){let f=document.getElementById('txFilter').value;let arr=[...data.transactions].filter(t=>f==='all'||t.type===f).sort((a,b)=>b.date.localeCompare(a.date));document.getElementById('txRows').innerHTML=arr.length?arr.map(t=>`<tr><td>${esc(t.date)}</td><td class="${t.type==='income'?'paid':'unpaid'}">${t.type==='income'?'Pemasukan':'Pengeluaran'}</td><td>${esc(t.desc)}</td><td><b>${rupiah(t.amount)}</b></td><td><button class="btn danger" onclick="deleteTx('${t.id}')">Hapus</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty">Belum ada transaksi.</td></tr>';}
+function renderRecap(){let y=+document.getElementById('recapYear').value;let monthTotals=MONTHS.map((name,m)=>{let income=0,expense=0;data.transactions.forEach(t=>{let p=dateParts(t.date);if(p.x===y&&p.m===m){if(t.type==='income')income+=+t.amount;else expense+=+t.amount;}});return{name,income,expense,balance:income-expense};});document.getElementById('monthGrid').innerHTML=monthTotals.map(v=>`<div class="month"><b>${v.name}</b><div class="hint">Pemasukan: ${rupiah(v.income)}</div><div class="hint">Pengeluaran: ${rupiah(v.expense)}</div><strong>${rupiah(v.balance)}</strong></div>`).join('');let i=monthTotals.reduce((a,v)=>a+v.income,0),e=monthTotals.reduce((a,v)=>a+v.expense,0);document.getElementById('yearSummary').textContent=`Tahun ${y}: total pemasukan ${rupiah(i)}, total pengeluaran ${rupiah(e)}, saldo bersih ${rupiah(i-e)}.`;}
+function fillSelects(){let opts=MONTHS.map((m,i)=>`<option value="${i}">${m}</option>`).join('');document.getElementById('payMonth').innerHTML=opts;document.getElementById('payMonth').value=new Date().getMonth();let years='';for(let y=2024;y<=2035;y++)years+=`<option value="${y}">${y}</option>`;['payYear','recapYear'].forEach(id=>document.getElementById(id).innerHTML=years);document.getElementById('payYear').value=new Date().getFullYear();document.getElementById('recapYear').value=new Date().getFullYear();document.getElementById('weeklyAmount').value=data.weeklyAmount;document.getElementById('txDate').value=today();}
+function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('hidden',p.id!==id));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+document.getElementById('studentForm').addEventListener('submit',e=>{e.preventDefault();let name=document.getElementById('studentName').value.trim();if(!name)return;if(data.students.some(s=>s.name.toLowerCase()===name.toLowerCase())){alert('Nama siswa sudah terdaftar.');return;}data.students.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random()),name});document.getElementById('studentName').value='';save();});
+document.getElementById('studentSearch').addEventListener('input',renderStudents);
+function editStudent(id){let s=data.students.find(x=>x.id===id);if(!s)return;let n=prompt('Ubah nama siswa:',s.name);if(n&&n.trim()){s.name=n.trim();save();}}
+function deleteStudent(id){if(!confirm('Hapus siswa ini? Catatan pembayaran historis tetap tersimpan.'))return;data.students=data.students.filter(s=>s.id!==id);save();}
+document.getElementById('applyAmount').onclick=()=>{let n=+document.getElementById('weeklyAmount').value;if(n<0||!Number.isFinite(n)){alert('Nominal tidak valid.');return;}if(!confirm('Mengubah nominal akan menyesuaikan nominal yang ditampilkan pada pembayaran yang sudah ditandai. Lanjutkan?'))return;data.weeklyAmount=n;save();};
+['payMonth','payYear'].forEach(id=>document.getElementById(id).addEventListener('change',renderPayments));
+function togglePay(sid,y,m,w){let key=`${y}-${m}-${sid}-${w}`;if(data.payments[key]){delete data.payments[key];data.transactions=data.transactions.filter(t=>t.paymentKey!==key);}else{data.payments[key]=true;let s=data.students.find(x=>x.id===sid);data.transactions.push({id:String(Date.now()+Math.random()),type:'income',date:`${y}-${String(m+1).padStart(2,'0')}-${String(Math.min(w*7,28)).padStart(2,'0')}`,amount:+data.weeklyAmount,desc:`Kas mingguan ${s?s.name:'Siswa'} • Minggu ${w} • ${MONTHS[m]} ${y}`,paymentKey:key});}save();}
+document.getElementById('transactionForm').addEventListener('submit',e=>{e.preventDefault();let amount=+document.getElementById('txAmount').value;if(amount<=0)return;data.transactions.push({id:String(Date.now()+Math.random()),type:document.getElementById('txType').value,date:document.getElementById('txDate').value,amount,desc:document.getElementById('txDesc').value.trim()});e.target.reset();document.getElementById('txDate').value=today();save();});
+document.getElementById('txFilter').addEventListener('change',renderTransactions);
+function deleteTx(id){let t=data.transactions.find(x=>x.id===id);if(t?.paymentKey){delete data.payments[t.paymentKey];}if(confirm('Hapus transaksi ini?')){data.transactions=data.transactions.filter(x=>x.id!==id);save();}}
+document.getElementById('recapYear').addEventListener('change',renderRecap);
+document.getElementById('exportBtn').onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-kas-xi-ips-1.json';a.click();URL.revokeObjectURL(a.href);};
+document.getElementById('importBtn').onclick=()=>{let file=document.getElementById('importFile').files[0];if(!file){alert('Pilih file backup JSON dahulu.');return;}let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x.students)||!Array.isArray(x.transactions)||typeof x.payments!=='object')throw Error();if(confirm('Import akan mengganti data yang ada. Lanjutkan?')){data={...data,...x};save();document.getElementById('backupMsg').textContent='Backup berhasil diimpor.';}}catch(e){alert('File backup tidak valid.');}};r.readAsText(file);};
+document.getElementById('resetBtn').onclick=()=>{if(prompt('Ketik HAPUS untuk menghapus semua data:')==='HAPUS'){data={students:[],transactions:[],payments:{},weeklyAmount:5000};save();}};
+load();fillSelects();render();
+</script>
+</body></html>
